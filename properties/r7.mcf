@@ -1,0 +1,1 @@
+[true*]  forall  s:Sluice.([SluiceClose(s,Inside).SluiceOpen(s,Outside).(!SluiceClose(s,Outside))*.pump(s)]false&&[SluiceClose(s,Outside).SluiceOpen(s,Inside).(!SluiceClose(s, Inside))*.pump(s)]false )

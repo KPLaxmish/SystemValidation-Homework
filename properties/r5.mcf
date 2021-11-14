@@ -1,0 +1,3 @@
+[true*.beginProjection.(!endProjection)*.Move(true,IPS, WR_O)]false
+    &&
+[true*.beginProjection.(!endProjection)*.Move(true,WR_I, IPS)]false
