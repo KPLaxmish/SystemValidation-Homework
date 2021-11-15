@@ -24,7 +24,7 @@ act
 	% Sluice reponses regarding the status of its doors (inside and outside)
 	sluiceOpenSent, sluiceOpenReceived, sluiceOpenSignal: Bool # Position;
 	sluiceClosedSent, sluiceClosedReceived, sluiceClosedSignal: Bool # Position;
-	SluiceOpen,SluiceClose, signalDoorStuck: Sluice # DoorType;
+	SluiceOpen,SluiceClose, DoorStuck: Sluice # DoorType;
  	% Pumping the air out of a sluice
 	pump:Sluice; 
 	% Request to move sent by the robots to the controller.
@@ -69,9 +69,9 @@ Sluice(s:Sluice, outsideDoor:Bool, insideDoor:Bool, outsideDoorStuck:Bool, insid
 	<>
     (((!outsideDoor && !insideDoor) -> 
 		((checkOpenReceived(SluiceMap(s,Outside)).(SluiceOpen(s,Outside).sluiceOpenSent(true,SluiceMap(s,Outside)).Sluice(outsideDoor=true) + 
-			(signalDoorStuck(s,Outside).(sluiceOpenSent(false, SluiceMap(s,Outside))+sluiceClosedSent(false, SluiceMap(s,Outside))). errorDoorStuckSent(SluiceMap(s,Outside)) . Sluice(outsideDoorStuck=true)))) + 
+			(DoorStuck(s,Outside).(sluiceOpenSent(false, SluiceMap(s,Outside))+sluiceClosedSent(false, SluiceMap(s,Outside))). errorDoorStuckSent(SluiceMap(s,Outside)) . Sluice(outsideDoorStuck=true)))) + 
   		 (checkOpenReceived(SluiceMap(s,Inside)).(pump(s).SluiceOpen(s,Inside).sluiceOpenSent(true, SluiceMap(s,Inside)).Sluice(insideDoor=true) +
-			(signalDoorStuck(s,Inside).(sluiceOpenSent(false, SluiceMap(s,Inside))+ sluiceClosedSent(false, SluiceMap(s,Inside))). errorDoorStuckSent(SluiceMap(s,Inside)) .Sluice(insideDoorStuck=true)))))
+			(DoorStuck(s,Inside).(sluiceOpenSent(false, SluiceMap(s,Inside))+ sluiceClosedSent(false, SluiceMap(s,Inside))). errorDoorStuckSent(SluiceMap(s,Inside)) .Sluice(insideDoorStuck=true)))))
     ) 
   +
     ((outsideDoor && !insideDoor) -> 
@@ -330,6 +330,25 @@ Controller(s1Stuck: Bool, s2Stuck: Bool) = (sum src, des: Position.
  
 init 
 
+		hide({
+			MoveReq,
+			MoveResponse,
+			sluiceOpenSignal,
+			sluiceClosedSignal,
+			checkOpen,
+			checkClose,
+			waferStatusUpdate,
+			controllerWaferRequest,
+			controllerWaferResponse,
+			errorDoorStuck,
+			requestWafer,
+			registerEmpty,
+			sluice1Stuck,
+			sluice2Stuck,
+			beginProjection,
+			endProjection
+		},
+
 
   	allow ({pump,
 			checkOpen,checkClose,
@@ -340,7 +359,7 @@ init
 			beginProjection,endProjection,projectionUpdate,
 			registerEmpty, emptyOutputRack,
 			errorDoorStuck, systemShutdown, sluice1Stuck, sluice2Stuck,
-			signalDoorStuck, requestWafer
+			DoorStuck, requestWafer
 		  },
 
     comm  ({ 
@@ -362,4 +381,4 @@ init
       		Robot1 || Robot2 ||Robot3|| ImageProjectionSystem||Sluice(S1,false,false,false,false)||Sluice(S2,false,false,false,false)||Controller(false, false)||    
 	 	    WaferPositionTracker(true, Empty, Empty, Empty,  Empty, Empty, Empty, Empty) || OutputRack || InputRack
       	 
-));
+)));

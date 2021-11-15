@@ -1,1 +1,1 @@
-[true*]forall s:Sluice.[Move(true, IPS, WR_O).(!Move(true, WR_O, SluiceMap(s, Inside))*).  Move(true, IPS, WR_O)] false
+[true*.Move(true, IPS, WR_O).(!Move(true, WR_O, SluiceMap(S1, Inside))||!Move(true, WR_O, SluiceMap(S2, Inside))).Move(true, IPS, WR_O)]false

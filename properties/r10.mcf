@@ -1,0 +1,3 @@
+[true*.Move(true,IPS, WR_I)]false
+    &&
+[true*.Move(true,WR_O, IPS)]false
